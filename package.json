@@ -1,0 +1,26 @@
+{
+  "name": "varint",
+  "description": "use msb to create integer values of varying sizes",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:datcxx/cxx-varint.git"
+  },
+  "dependencies": {
+    "git@github.com:heapwolf/cxx-tap": "8a380d78"
+  },
+  "license": "MIT",
+  "scripts": {
+    "test": [
+      "c++ -std=c++2a",
+      "test/index.cxx -o test/index && ./test/index"
+    ],
+    "install": ""
+  },
+  "flags": [
+    "-std=c++2a"
+  ],
+  "files": [
+    "index.hxx",
+    "index.cxx"
+  ]
+}
