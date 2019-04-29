@@ -30,13 +30,19 @@ struct Decoded {
   unsigned value;
   unsigned bytes;
 };
+```
 
+```c++
 Encoded encode (unsigned num, std::vector<uint8_t> out, unsigned offset = 0);
 Decoded decode (std::vector<uint8_t> buf, unsigned offset = 0);
 ```
 
 # SEE ALSO
 
-This is a port of Chris Dickinson's [varint][0] implementation.
+- This is a port of Chris Dickinson's [varint][0] implementation.
+- This also references Dat Rust [varint][1] implementation.
+- A quick [summary][2] of how varint encoding works.
 
 [0]:https://github.com/chrisdickinson/varint
+[1]:https://github.com/datrs/varinteger
+[2]:https://developers.google.com/protocol-buffers/docs/encoding
