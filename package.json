@@ -6,7 +6,7 @@
     "url": "git@github.com:datcxx/cxx-varint.git"
   },
   "dependencies": {
-    "git@github.com:heapwolf/cxx-tap": "8a380d78"
+    "git@github.com:heapwolf/cxx-tap": "07821de0"
   },
   "license": "MIT",
   "scripts": {

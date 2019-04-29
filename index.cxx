@@ -5,51 +5,49 @@
 #include <iostream>
 
 namespace Varint {
-  unsigned MSB = 0x80; // 128
-  unsigned REST = 0x7F; // 127
-
-  unsigned MSBALL = ~REST;
-  unsigned INT = pow(2, 31);
-
-  Encoded encode (unsigned num, std::vector<uint8_t> out, unsigned offset) {
-    size_t oldOffset = offset;
-
-    while (num >= INT) {
-      out[offset++] = (num & 0xFF) | MSB;
-      num /= 128;
+  Encoded encode (unsigned value, std::vector<uint8_t> buf, unsigned offset) {
+    if (buf.empty()) {
+      buf.resize(1);
     }
 
-    while(num & MSBALL) {
-      out[offset++] = (num & 0xFF) | MSB;
-      num >>= 7;
+    unsigned _offset = offset;
+    unsigned size = buf.size();
+
+    while (value > 127) {
+      buf[_offset] = (uint8_t) value | 128;
+      _offset += 1;
+      value >>= 7;
+      size += _offset;
+      buf.resize(size);
     }
 
-    out[offset] = num | 0;
-    
+    buf[_offset] = static_cast<uint8_t>(value);
+
     Encoded enc;
-    enc.bytes = offset - oldOffset + 1;
-    enc.value = out;
-    
+    enc.value = buf;
+    enc.bytes = _offset + 1 - offset;
     return enc;
   }
 
   Decoded decode (std::vector<uint8_t> buf, unsigned offset) {
-    Decoded dec;
-    unsigned shift = 0u;
-    unsigned counter = offset;
-    uint8_t b;
+    Decoded dec = {};
 
-    do {
-      b = buf[counter++];
+    unsigned _offset = offset;
+    unsigned fac = 1;
 
-      dec.value = shift < 28
-        ? (b & REST) << shift
-        : (b & REST) * pow(2, shift);
+    while (true) {
+      uint8_t byte = buf[_offset];
 
-      shift += 7;
-    } while (b >= MSB);
-    
-    dec.bytes = counter - offset;
+      dec.value += (unsigned) fac * (byte & 127);
+      fac <<= 7;
+
+      _offset += 1;
+      dec.bytes = _offset - offset;
+
+      if ((byte & 128) == 0) {
+        break;
+      }
+    }
     
     return dec;
   }
