@@ -132,7 +132,7 @@ int main() {
     t->end();
   });
 
-  /* t.test("fuzz test - big", [](auto t) {
+  t.test("fuzz test - big", [](auto t) {
     auto MAX_INTD = pow(2, 55);
     auto MAX_INT = pow(2, 31);
 
@@ -141,12 +141,10 @@ int main() {
       std::vector<uint8_t> buf(1);
       auto encoded = Varint::encode(expect, buf);
       auto decoded = Varint::decode(encoded.value);
-      // t->equal(expect, decoded.value, "fuzz test: " + std::to_string(expect));
-      t->comment("ENC BYTES" + std::to_string(encoded.bytes));
-      t->comment("ENC VALUE SIZE" + std::to_string(encoded.value.size()));
-      //t->equal(encoded.bytes, encoded.value.size());
+      t->equal(expect, decoded.value, "fuzz test: " + std::to_string(expect));
+      t->equal(encoded.bytes, encoded.value.size());
     }
 
     t->end();
-  }); */
+  });
 }
