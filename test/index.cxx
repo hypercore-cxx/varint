@@ -4,6 +4,7 @@
 #include <vector>
 #include <stdlib.h>
 #include <math.h>
+#include <exception>
 
 unsigned randint (unsigned range) {
   srand (time(NULL));
@@ -143,6 +144,29 @@ int main() {
       auto decoded = Varint::decode(encoded.value);
       t->equal(expect, decoded.value, "fuzz test: " + std::to_string(expect));
       t->equal(encoded.bytes, encoded.value.size());
+    }
+
+    t->end();
+  });
+
+  t.test("buffer too short", [](auto t) {
+
+    auto encoded = Varint::encode(9812938912312);
+    auto buffer = Varint::encode(encoded.bytes);
+
+    auto l = buffer.value.size();
+
+    auto slice = [](auto v, auto s, auto e) {
+      return std::vector<uint8_t>(v.begin() + s, v.end() - e);
+    };
+
+    while(l--) {
+
+      try {
+        auto decoded = Varint::decode(slice(buffer.value, 0, l));
+      } catch (std::exception& ex) {
+        t->pass("exception thrown");
+      }
     }
 
     t->end();
