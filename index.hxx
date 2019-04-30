@@ -14,8 +14,8 @@ namespace Varint {
     unsigned bytes;
   };
 
-  Encoded encode (unsigned num);
-  Encoded encode (unsigned num, std::vector<uint8_t> out, unsigned offset = 0);
+  Encoded encode (unsigned value);
+  Encoded encode (unsigned value, std::vector<uint8_t> buf, unsigned offset = 0);
 
   Decoded decode (std::vector<uint8_t> buf, unsigned offset = 0);
   

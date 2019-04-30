@@ -124,7 +124,9 @@ int main() {
     for (auto i = 0; i <= 53; i++) {
       auto n = pow(2, i);
       auto len = Varint::encodingLength(n);
-      t->equal(Varint::encode(n).value.size(), len, "encoded value size should match encodingLength()");
+      auto value = Varint::encode(n).value;
+
+      t->equal(value.size(), len, "encoded value size should match encodingLength()");
     }
 
     t->end();

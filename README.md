@@ -33,6 +33,7 @@ struct Decoded {
 ```
 
 ```c++
+Encoded encode (unsigned num);
 Encoded encode (unsigned num, std::vector<uint8_t> out, unsigned offset = 0);
 Decoded decode (std::vector<uint8_t> buf, unsigned offset = 0);
 ```
