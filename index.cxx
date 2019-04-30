@@ -1,4 +1,4 @@
-#include <math.h>
+#include <cmath>
 #include <vector>
 
 #include "index.hxx"
@@ -27,6 +27,11 @@ namespace Varint {
     enc.value = buf;
     enc.bytes = _offset + 1 - offset;
     return enc;
+  }
+
+  Encoded encode (unsigned value) {
+    std::vector<uint8_t> buf(1);
+    return Varint::encode(value, buf);
   }
 
   Decoded decode (std::vector<uint8_t> buf, unsigned offset) {

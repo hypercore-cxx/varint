@@ -42,7 +42,9 @@ Decoded decode (std::vector<uint8_t> buf, unsigned offset = 0);
 - This is a port of Chris Dickinson's [varint][0] implementation.
 - This also references Dat Rust [varint][1] implementation.
 - A quick [summary][2] of how varint encoding works.
+- See this [guide][3] to efficiently encoding variable-length integers in C/C++.
 
 [0]:https://github.com/chrisdickinson/varint
 [1]:https://github.com/datrs/varinteger
 [2]:https://developers.google.com/protocol-buffers/docs/encoding
+[3]:https://techoverflow.net/2013/01/25/efficiently-encoding-variable-length-integers-in-cc/

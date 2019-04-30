@@ -21,6 +21,7 @@
   ],
   "files": [
     "index.hxx",
+    "length.cxx",
     "index.cxx"
   ]
 }

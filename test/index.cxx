@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <stdlib.h>
+#include <math.h>
 
 unsigned randint (unsigned range) {
   srand (time(NULL));
@@ -59,4 +60,91 @@ int main() {
     t->equal(enc.value[1], 2);
     t->end();
   });
+
+  t.test("test decode single bytes", [](auto t) {
+    auto expected = randint(127);
+    std::vector<uint8_t> buf(1);
+    buf[0] = expected;
+    auto data = Varint::decode(buf);
+
+    t->equal(data.value, expected);
+    t->equal(data.bytes, 1);
+    t->end();
+  });
+
+  t.test("test decode multiple bytes with zero", [](auto t) {
+    auto expected = randint(127);
+    std::vector<uint8_t> buf(2);
+    buf[0] = 128;
+    buf[1] = expected;
+    auto data = Varint::decode(buf);
+    t->equal(data.value, expected << 7);
+    t->equal(data.bytes, 2);
+    t->end();
+  });
+
+  t.test("encode single byte", [](auto t) {
+    auto expected = randint(127);
+    auto encoded = Varint::encode(expected);
+    t->equal(encoded.value[0], expected);
+    t->equal(encoded.bytes, 1);
+    t->end();
+  });
+
+  t.test("encode multiple byte with zero first byte", [](auto t) {
+    auto expected = 0x0F00;
+    std::vector<uint8_t> buf(2);
+    auto encoded = Varint::encode(expected, buf);
+    t->equal((int) encoded.value[0], 128);
+    t->equal((int) encoded.value[1], 30);
+    t->equal(encoded.bytes, 2);
+    t->end();
+  });
+
+  t.test("big integers", [](auto t) {
+    std::vector<uint8_t> bigs;
+
+    for (auto i = 32; i <= 53; i++) {
+      bigs.push_back(pow(2, i) - 1);
+      bigs.push_back(pow(2, i));
+    }
+
+    for (auto& n : bigs) {
+      auto data = Varint::encode(n);
+      // std::cout << n << '->' << data.value << endl;
+      t->equal(Varint::decode(data.value).value, n);
+      t->notEqual(Varint::decode(data.value).value, n - 1);
+    }
+
+    t->end();
+  });
+
+  t.test("encodingLength", [](auto t) {
+
+    for (auto i = 0; i <= 53; i++) {
+      auto n = pow(2, i);
+      auto len = Varint::encodingLength(n);
+      t->equal(Varint::encode(n).value.size(), len, "encoded value size should match encodingLength()");
+    }
+
+    t->end();
+  });
+
+  /* t.test("fuzz test - big", [](auto t) {
+    auto MAX_INTD = pow(2, 55);
+    auto MAX_INT = pow(2, 31);
+
+    for (auto i = 0, len = 100; i < len; ++i) {
+      auto expect = randint(MAX_INTD - MAX_INT) + MAX_INT;
+      std::vector<uint8_t> buf(1);
+      auto encoded = Varint::encode(expect, buf);
+      auto decoded = Varint::decode(encoded.value);
+      // t->equal(expect, decoded.value, "fuzz test: " + std::to_string(expect));
+      t->comment("ENC BYTES" + std::to_string(encoded.bytes));
+      t->comment("ENC VALUE SIZE" + std::to_string(encoded.value.size()));
+      //t->equal(encoded.bytes, encoded.value.size());
+    }
+
+    t->end();
+  }); */
 }
