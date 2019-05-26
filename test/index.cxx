@@ -1,10 +1,13 @@
-#include "../index.hxx"
-#include "../deps/heapwolf/cxx-tap/index.hxx"
-
 #include <vector>
 #include <stdlib.h>
 #include <math.h>
 #include <exception>
+
+#include "../deps/heapwolf/cxx-tap/index.hxx"
+
+#include "../index.hxx"
+
+namespace Varint = Hyper::Util::Varint;
 
 unsigned randint (unsigned range) {
   srand (time(NULL));
